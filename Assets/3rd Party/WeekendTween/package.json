@@ -1,0 +1,21 @@
+{
+  "name": "com.noweekend.weekendtween",
+  "version": "0.1.7",
+  "displayName": "Weekend Tween",
+  "description": "Tween manager with visual editor",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "https://example.com/",
+  "changelogUrl": "https://example.com/changelog.html",
+  "licensesUrl": "https://example.com/licensing.html",
+  "keywords": [
+    "Tween",
+    "Ease"
+  ],
+  "author": {
+    "name": "noWeekend",
+    "email": "ben@noWeekend.com",
+    "url": "https://www.noWeekend.com"
+  },
+  "type": "tool"
+}

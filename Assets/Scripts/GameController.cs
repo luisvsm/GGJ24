@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
 	public AudioClip musicClip;
 	public GameObject pausePanel;
+	public OptionsPanel optionsPanel;
 
 	// Start is called before the first frame update
 	void Start()
@@ -40,6 +40,7 @@ public class GameController : MonoBehaviour
 	{
 		Time.timeScale = 1;
 		pausePanel.SetActive(false);
+		optionsPanel.Hide(true);
 	}
 
 	public void OnResumeButtonPress()
@@ -50,11 +51,17 @@ public class GameController : MonoBehaviour
 	public void OnMainMenuButtonPress()
 	{
 		UnPauseGame();
-		SceneManager.LoadScene("Main Menu");
+		GameFlowController.LoadScene("Main Menu");
+	}
+
+	public void OnOptionsButtonPress()
+	{
+		optionsPanel.Show();
 	}
 
 	public void OnExitButtonPress()
 	{
 		Application.Quit();
 	}
+
 }

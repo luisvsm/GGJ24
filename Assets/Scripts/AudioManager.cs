@@ -54,22 +54,6 @@ public class AudioManager : MonoBehaviour
 		//Mark this game object as not to be destroyed when a new scene is loaded
 		DontDestroyOnLoad(this);
 
-		//Load any saved volume levels from player prefs
-
-		//Get the saved Master volume level (returns 1 if nothing has been saved)
-		float savedMasterVolumeLevel = PlayerPrefs.GetFloat(MasterVolumeSaveKey, 1);
-
-		//Set the mixer volume of the master volume
-		masterMixer.SetFloat(MasterVolumeMixerKey, savedMasterVolumeLevel);
-
-		//Get the saved Music volume level (returns 1 if nothing has been saved)
-		float savedMusicVolumeLevel = PlayerPrefs.GetFloat(MusicVolumeSaveKey, 1);
-		masterMixer.SetFloat(MusicVolumeMixerKey, savedMusicVolumeLevel);
-
-		//Get the saved SFX volume level (returns 1 if nothing has been saved)
-		float savedSfxVolumeLevel = PlayerPrefs.GetFloat(SfxVolumeSaveKey, 1);
-		masterMixer.SetFloat(SfxVolumeMixerKey, savedSfxVolumeLevel);
-
 		//Create SFX audio soruces
 		sfxAudioSources = new();
 
@@ -103,6 +87,20 @@ public class AudioManager : MonoBehaviour
 
 	}
 
+	private void Start()
+	{
+		//Load any saved volume levels from player prefs
+
+		//Set the mixer volume of the master volume
+		SetMasterVolume(GetMasterVolume(), false);
+
+		//Get the saved Music volume level (returns 1 if nothing has been saved)
+		SetMusicVolume(GetMusicVolume(), false);
+
+		//Get the saved SFX volume level (returns 1 if nothing has been saved)
+		SetSfxVolume(GetSfxVolume(), false);
+	}
+
 	//Pause the Background Music
 	public void PauseMusic()
 	{
@@ -120,35 +118,71 @@ public class AudioManager : MonoBehaviour
 	// Set Volume levels
 
 	//Change the master volume level
-	public void SetMasterVolume(float value)
+	public void SetMasterVolume(float value, bool doSave = true)
 	{
 		//Change the volume on the mixer
-		masterMixer.SetFloat(MasterVolumeMixerKey, value);
+		masterMixer.SetFloat(MasterVolumeMixerKey, LinearToDecibel(value));
 
 		//Save the volume to the player prefs
-		PlayerPrefs.SetFloat(MasterVolumeSaveKey, value);
+		if (doSave)
+		{
+			PlayerPrefs.SetFloat(MasterVolumeSaveKey, value);
+		}
+	}
+
+	public float GetMasterVolume()
+	{
+		return PlayerPrefs.GetFloat(MasterVolumeSaveKey, 1);
 	}
 
 	//Change the music volume level
-	public void SetMusicVolume(float value)
+	public void SetMusicVolume(float value, bool doSave = true)
 	{
 		//Change the volume on the mixer
-		masterMixer.SetFloat(MusicVolumeMixerKey, value);
+		masterMixer.SetFloat(MusicVolumeMixerKey, LinearToDecibel(value));
 
 		//Save the volume to the player prefs
-		PlayerPrefs.SetFloat(MusicVolumeSaveKey, value);
+		if (doSave)
+		{
+			PlayerPrefs.SetFloat(MusicVolumeSaveKey, value);
+		}
+	}
+
+	public float GetMusicVolume()
+	{
+		return PlayerPrefs.GetFloat(MusicVolumeSaveKey,1);
 	}
 
 	//Change the sfx music volume level
-	public void SetSfxVolume(float value)
+	public void SetSfxVolume(float value, bool doSave = true)
 	{
 		//Change the volume on the mixer
-		masterMixer.SetFloat(SfxVolumeMixerKey, value);
+		masterMixer.SetFloat(SfxVolumeMixerKey, LinearToDecibel(value));
 
 		//Save the volume to the player prefs
-		PlayerPrefs.SetFloat(SfxVolumeSaveKey, value);
+		if (doSave)
+		{
+			PlayerPrefs.SetFloat(SfxVolumeSaveKey, value);
+		}
 	}
 
+	public float GetSfxVolume()
+	{
+		return PlayerPrefs.GetFloat(SfxVolumeSaveKey,1);
+	}
+
+
+	private float LinearToDecibel(float linear)
+	{
+		float dB;
+
+		if (linear != 0)
+			dB = 20.0f * Mathf.Log10(linear);
+		else
+			dB = -144.0f;
+
+		return dB;
+	}
 
 	//-----------------------------------------------------
 	// Playing SFX

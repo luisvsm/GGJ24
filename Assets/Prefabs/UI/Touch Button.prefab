@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3210700236270195644}
   - component: {fileID: 3362609022074557331}
   - component: {fileID: 3352498654568511900}
+  - component: {fileID: 933376119062388714}
   m_Layer: 5
   m_Name: Touch Button
   m_TagString: Untagged
@@ -97,6 +98,24 @@ MonoBehaviour:
   butonText: {fileID: 694612164328307517}
   background: {fileID: 3362609022074557331}
   clickSound: {fileID: 8300000, guid: 70a1c1ad577b946fb97669890c2f0298, type: 3}
+  dropShadow: {fileID: 933376119062388714}
+  shadowLengthOut: 5
+  shadowLengthIn: 2
+--- !u!114 &933376119062388714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6181424932450237459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.18431373}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7658523625424472056
 GameObject:
   m_ObjectHideFlags: 0

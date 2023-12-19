@@ -41,7 +41,7 @@ public class OptionsPanel : MonoBehaviour
     public void OnClearSaveDataButtonPress()
     {
         SaveController.ClearData();
-        GameFlowController.LoadScene("Main Menu");
+        GameFlowController.LoadScene("Main Menu",false);
     }
 
     public void OnBackButtonPress()

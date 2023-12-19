@@ -8,6 +8,20 @@ public class GameController : MonoBehaviour
 	public GameObject pausePanel;
 	public OptionsPanel optionsPanel;
 
+	// Debug Options
+	[Space]
+	public bool Debug_Use_Debug = false;
+
+
+	private void Awake()
+	{
+
+#if !UNITY_EDITOR
+		Debug_Use_Debug = false;
+#endif
+
+	}
+
 	// Start is called before the first frame update
 	void Start()
     {
@@ -51,7 +65,7 @@ public class GameController : MonoBehaviour
 	public void OnMainMenuButtonPress()
 	{
 		UnPauseGame();
-		GameFlowController.LoadScene("Main Menu");
+		GameFlowController.LoadScene("Main Menu", false);
 	}
 
 	public void OnOptionsButtonPress()

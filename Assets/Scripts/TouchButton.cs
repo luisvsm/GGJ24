@@ -15,8 +15,13 @@ public class TouchButton : MonoBehaviour, IPointerClickHandler, IPointerDownHand
 	[SerializeField] private TextMeshProUGUI butonText;
 	[SerializeField] private Image background;
 	[SerializeField] private AudioClip clickSound;
+	[SerializeField] private Shadow dropShadow;
+	[SerializeField] private float shadowLengthOut = 5;
+	[SerializeField] private float shadowLengthIn = 2;
+
 	private Vector3 textStartPos;
 	private Vector3 TextDownPos => textStartPos + Vector3.down * 3;
+	private bool pointerHasLeft = false;
 
 	private void Awake()
 	{
@@ -61,10 +66,9 @@ public class TouchButton : MonoBehaviour, IPointerClickHandler, IPointerDownHand
 		{
 			return;
 		}
-		background.sprite = buttonPressedImage;
-		AudioManager.instance.PlaySFX(clickSound);
 
-		butonText.transform.localPosition = TextDownPos;
+		pointerHasLeft = false;
+		SetButtonDown();
 	}
 
 	public void OnPointerUp(PointerEventData eventData)
@@ -73,16 +77,46 @@ public class TouchButton : MonoBehaviour, IPointerClickHandler, IPointerDownHand
 		{
 			return;
 		}
-		onClickAction?.Invoke();
-		background.sprite = buttonUnPressedImage;
 
-		butonText.transform.localPosition = textStartPos;
+		if (pointerHasLeft)
+		{
+			pointerHasLeft = false;
+			return;
+		}
+
+		SetButtonUp();
+
+		onClickAction?.Invoke();
+
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
+		SetButtonUp();
+		pointerHasLeft = true;
+	}
+
+	private void SetButtonDown()
+	{
+		background.sprite = buttonPressedImage;
+		AudioManager.instance.PlaySFX(clickSound);
+
+		butonText.transform.localPosition = TextDownPos;
+		if (dropShadow != null)
+		{
+			dropShadow.effectDistance = new Vector2(shadowLengthIn, -shadowLengthIn);
+		}
+	}
+
+	private void SetButtonUp()
+	{
 		background.sprite = buttonUnPressedImage;
 
 		butonText.transform.localPosition = textStartPos;
+
+		if (dropShadow != null)
+		{
+			dropShadow.effectDistance = new Vector2(shadowLengthOut, -shadowLengthOut);
+		}
 	}
 }

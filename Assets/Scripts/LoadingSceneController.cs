@@ -6,43 +6,61 @@ using UnityEngine.UI;
 
 public class LoadingSceneController : MonoBehaviour
 {
-    private const float FADE_DURATION = 1;
+    // Const
+    private const float FADE_DURATION = 1; // The duration of fadding the screen in and out
 
-    public CanvasGroup fadePanel;
-    public Image loadingBarFill;
-    public CanvasGroup loadingGraphics;
+	// References
+	public CanvasGroup fadePanel;   // The main panel that fades in and out
+    public Image loadingBarFill;    // The loading bar for the scene
+	public CanvasGroup loadingGraphics; // A group that consists of the LOADING text and loading bar
 
+
+    // On Awake
 	private void Awake()
 	{
-        StartCoroutine(LoadLevelCorourine());
+        StartCoroutine(loadLevelCorourine());
         loadingGraphics.alpha = 0;
-	}
 
-	private IEnumerator LoadLevelCorourine()
-    {
-        yield return StartCoroutine(FadePanel(true));
+		// Main Level Loading coroutine.
+		IEnumerator loadLevelCorourine()
+		{
 
-		SceneManager.UnloadSceneAsync(GameFlowController.previousScene);
-		AsyncOperation loadLevel = SceneManager.LoadSceneAsync(GameFlowController.sceneToLoad,LoadSceneMode.Additive);
+			// Fade the fade panel in
+			yield return StartCoroutine(FadePanel(true));
 
-		loadingGraphics.alpha = GameFlowController.loadUsingLoadingBar?1:0;
+			// Unload the old scene
+			SceneManager.UnloadSceneAsync(GameFlowController.previousScene);
 
-		while (!loadLevel.isDone)
-        {
-			if (GameFlowController.loadUsingLoadingBar)
+			//Load in the new scene.
+			AsyncOperation loadLevel = SceneManager.LoadSceneAsync(GameFlowController.desiredSceneToLoad, LoadSceneMode.Additive);
+
+			// Show the loading graphics if requested
+			loadingGraphics.alpha = GameFlowController.loadUsingLoadingBar ? 1 : 0;
+
+			// Wait until the level is loaded
+			while (!loadLevel.isDone)
 			{
-				loadingBarFill.fillAmount = Mathf.Clamp01(loadLevel.progress / 0.9f);
+				// If requested fill up the loading bar
+				if (GameFlowController.loadUsingLoadingBar)
+				{
+					loadingBarFill.fillAmount = Mathf.Clamp01(loadLevel.progress / 0.9f);
+				}
+				yield return null;
 			}
-            yield return null;
-        }
 
-		loadingGraphics.alpha = 0;
+			// Hide the loading graphics
+			loadingGraphics.alpha = 0;
 
-		yield return StartCoroutine(FadePanel(false));
+			//Fade in the fade panel;
+			yield return StartCoroutine(FadePanel(false));
 
-        SceneManager.UnloadSceneAsync("Loading Scene");
+			// Unload this scene
+			SceneManager.UnloadSceneAsync("Loading Scene");
+		}
 	}
 
+
+	// Fade the fade panel in/out
     private IEnumerator FadePanel(bool fadeIn)
     {
         float startValue = fadePanel.alpha;

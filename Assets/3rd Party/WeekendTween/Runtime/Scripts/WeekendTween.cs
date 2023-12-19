@@ -22,12 +22,7 @@ namespace noWeekend
 		public bool hideAfterDisable;
 		public bool useUnscaledTime;
 
-		public bool useStopMotion;
-		public float frameRate = 1;
-		
-		private float stopMotionTimer = 0;
-
-		private List<Renderer> renders;     //List of renderers in this reference object
+		private List<CanvasRenderer> canvasRenderers;
 		private List<Image> images;
 
 		public UnityEvent onActivateCompleteAction,onDeactivateCompleteAction;
@@ -63,7 +58,10 @@ namespace noWeekend
         {
             if (initiliseActiveState) InitiliseActiveState();
 
-			if (hideOnEnable) Hide();
+			if (hideOnEnable)
+			{
+				Hide();
+			}
 
 			if (activateOnEnable)Activate();
         }
@@ -73,9 +71,9 @@ namespace noWeekend
 		{
 			GetAllRenderersIfNeeded();
 
-			foreach (Renderer renderer in renders)
-			{
-				renderer.enabled = false;
+            foreach (CanvasRenderer cRenderers in canvasRenderers)
+            {
+				cRenderers.cull = true;
 			}
 
 			foreach (Image image in images)
@@ -90,15 +88,16 @@ namespace noWeekend
 
 			GetAllRenderersIfNeeded();
 
-			foreach (Renderer renderer in renders)
+			foreach (CanvasRenderer cRenderers in canvasRenderers)
 			{
-				renderer.enabled = true;
+				cRenderers.cull = false;
 			}
 
 			foreach (Image image in images)
 			{
 				image.enabled = true;
 			}
+
 		}
 
         /// <summary>
@@ -248,7 +247,6 @@ namespace noWeekend
 
 		public void Activate(Action onComplete = null, float stopMotionStart = 0)
 		{
-			stopMotionTimer = frameRate * stopMotionStart;
 			Activate(onComplete);
 		}
 		
@@ -274,27 +272,13 @@ namespace noWeekend
 
 			while (timer < longestTween)
 			{
-				if (useStopMotion)
+				
+				foreach (EaseAction easeAction in activateEaseActions)
 				{
-					if (stopMotionTimer > frameRate)
-					{
-						stopMotionTimer = 0;
-						foreach (EaseAction easeAction in activateEaseActions)
-						{
-							easeAction.Process(targetTransform, timer);
-						}
-					}
-				}
-				else
-				{
-					foreach (EaseAction easeAction in activateEaseActions)
-					{
-						easeAction.Process(targetTransform, timer);
-					}
+					easeAction.Process(targetTransform, timer);
 				}
 				
 				timer += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
-				stopMotionTimer += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 				yield return null;
 			}
 
@@ -320,7 +304,6 @@ namespace noWeekend
 
 		public void Deactivate(Action onComplete = null, float stopMotionStart = 0)
 		{
-			stopMotionTimer = frameRate * stopMotionStart;
 			Deactivate(onComplete);
 		}
 		
@@ -348,28 +331,13 @@ namespace noWeekend
 
 			while (timer < longestTween)
 			{
-				if (useStopMotion)
+				foreach (EaseAction easeAction in deactivateEaseActions)
 				{
-					if (stopMotionTimer > frameRate)
-					{
-
-						stopMotionTimer = 0;
-						foreach (EaseAction easeAction in deactivateEaseActions)
-						{
-							easeAction.Process(targetTransform, timer);
-						}
-					}
-				}
-				else
-				{
-					foreach (EaseAction easeAction in deactivateEaseActions)
-					{
-						easeAction.Process(targetTransform, timer);
-					}
+					easeAction.Process(targetTransform, timer);
 				}
 				
 				timer += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
-				stopMotionTimer += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+
 				yield return null;
 			}
 
@@ -398,7 +366,7 @@ namespace noWeekend
 		//Find all renderers as children of the targetTransform
 		private void GetAllRenderersIfNeeded()
 		{
-			if (renders != null) return;
+			if (canvasRenderers != null) return;
 
 			RebuildRederers();
 		}
@@ -406,18 +374,17 @@ namespace noWeekend
 		//Compliles a list of renders and images to hide if needed
 		public void RebuildRederers()
 		{
-			renders = new();
+			canvasRenderers = new();
 			images = new();
-
 			recursiveCheck(targetTransform);
 
 			void recursiveCheck(Transform checkingTransform)
 			{
-				foreach (Renderer renderer in checkingTransform.GetComponentsInChildren<Renderer>())
-				{
-					renders.Add(renderer);
-				}
-
+                foreach (CanvasRenderer cRenderer in checkingTransform.GetComponentsInChildren<CanvasRenderer>())
+                {
+					canvasRenderers.Add(cRenderer);
+                }
+				
 				foreach (Image image in checkingTransform.GetComponentsInChildren<Image>())
 				{
 					images.Add(image);

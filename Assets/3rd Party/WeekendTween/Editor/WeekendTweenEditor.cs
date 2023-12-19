@@ -32,7 +32,8 @@ namespace noWeekend
 			if (myTarget == null || myTarget.targetTransform == null) return;
 			if (previewState == State.None) return;
 			if (Application.isPlaying) return;
-			if (myTarget.activateEaseActions.Count == 0) return;
+			if (myTarget.activateEaseActions.Count == 0 && previewState == State.Activate) return;
+			if (myTarget.deactivateEaseActions.Count == 0 && previewState == State.Deactivate) return;
 
 			if (previewState == State.Activate)
 			{
@@ -47,7 +48,7 @@ namespace noWeekend
 
 			WeekendTween myObj = (WeekendTween)target;
 
-			//Process each eash in active/deactive lists
+			//Process each ease in active/deactive lists
 			foreach (EaseAction easeAction in previewState == State.Activate ? myTarget.activateEaseActions : myTarget.deactivateEaseActions)
 			{
 				easeAction.Process(refererceTransform, myTarget.EditorTimer);
@@ -131,12 +132,7 @@ namespace noWeekend
 
 			//Select if a tween uses unscaled time or not
 			myTarget.useUnscaledTime = EditorGUILayout.Toggle("Use Unscaled time", myTarget.useUnscaledTime);
-			myTarget.useStopMotion = EditorGUILayout.Toggle("Use Stop Motion", myTarget.useStopMotion);
-			if (myTarget.useStopMotion)
-			{
-				myTarget.frameRate = EditorGUILayout.FloatField("Seconds Per Frame", myTarget.frameRate);
-			}
-			
+
 			//if (useUnscaledTimeValue != myTarget.useUnscaledTime)
 			//{
 			//	myTarget.useUnscaledTime = useUnscaledTimeValue;

@@ -5,7 +5,7 @@ urlencode() {
 }
 
 ExpiryTime=$(($(date +%s) + 7776000))
-ProjectName="GGJ2023"
+ProjectName="GGJ2024"
 
 ScriptDirectory=$(dirname "$0")
 

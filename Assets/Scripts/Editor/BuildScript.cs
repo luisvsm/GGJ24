@@ -24,6 +24,7 @@ public class BuildScript
         string buildArtifact = $"./builds/{buildFolder}/{buildName}.{extension}";
         BuildReport buildReport = null;
         startLoggingErrors();
+        PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone, ScriptingImplementation.IL2CPP);
 
         try{
             buildReport = BuildPipeline.BuildPlayer(getScenes(), buildArtifact,
@@ -52,6 +53,8 @@ public class BuildScript
         BuildReport buildReport = null;
         startLoggingErrors();
 
+        PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone, ScriptingImplementation.IL2CPP);
+
         try{
             buildReport = BuildPipeline.BuildPlayer(getScenes(), buildArtifact,
                 BuildTarget.StandaloneOSX, developmentBuild);
@@ -77,6 +80,9 @@ public class BuildScript
         string buildArtifact = $"./builds/{buildFolder}/{buildName}.{extension}";
         BuildReport buildReport = null;
         startLoggingErrors();
+
+        // The build server is osx so it can only build mono
+        PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
 
         try{
             buildReport = BuildPipeline.BuildPlayer(getScenes(), buildArtifact,

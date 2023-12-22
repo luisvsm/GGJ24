@@ -19,6 +19,7 @@ largeIconPath=$7
 
 FileName=$ProjectName-$Platform-$(date +'%Y-%m')$Extension
 
+rm "$FileName" || true
 mv "$ArtifactPath" "$FileName"
 
 ArtifactURL="https://builds.connectedplay.io/$ProjectName/$FileName"

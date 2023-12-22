@@ -13,4 +13,4 @@
 # "CODE SIGN IDENTITY" \
 # "Game/Assets/Scripts/Editor/exportOptions.plist"
 xcodebuild -project "$1" -scheme Unity-iPhone -allowProvisioningUpdates clean archive -archivePath archive DEVELOPMENT_TEAM="$2" PROVISIONING_PROFILE_SPECIFIER_APP="$3" CODE_SIGN_IDENTITY_APP="$4"
-xcodebuild -exportArchive -archivePath archive.xcarchive -exportOptionsPlist "$5" -exportPath export CODE_SIGN_IDENTITY_APP="$4"
+xcodebuild -exportArchive -archivePath archive.xcarchive -exportOptionsPlist "$6" -exportPath export CODE_SIGN_IDENTITY_APP="$5"

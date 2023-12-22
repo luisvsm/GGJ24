@@ -10,11 +10,11 @@
 	<string>ad-hoc</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.luisvsm.ggj.*</key>
+		<key>com.luisvsm.ggj.2024</key>
 		<string>Luis and friends GGJ</string>
 	</dict>
 	<key>signingCertificate</key>
-	<string>Apple Distribution: Luis Van Slageren (NB7FKRMJ66)</string>
+	<string>Apple Distribution: Luis Van Slageren</string>
 	<key>signingStyle</key>
 	<string>manual</string>
 	<key>stripSwiftSymbols</key>
